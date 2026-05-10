@@ -61,29 +61,11 @@ def send_wechat(title, content):
 # ------------------- 读取 / 保存 上一次状态 -------------------
 # 获取上一次状态（从 GitHub 变量）
 def get_last_state():
-    try:
-        repo = os.getenv("GITHUB_REPOSITORY")
-        token = os.getenv("GITHUB_TOKEN")
-        url = f"https://api.github.com/repos/{repo}/actions/variables/LAST_STATE"
-        headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
-        r = requests.get(url, headers=headers)
-        if r.status_code == 200:
-            return r.json()["value"]
-    except:
-        return None
-    return None
+    return os.getenv("LAST_STATE", None)
 
-# 保存新状态（写入 GitHub 变量）
 def save_state(state):
-    try:
-        repo = os.getenv("GITHUB_REPOSITORY")
-        token = os.getenv("GITHUB_TOKEN")
-        url = f"https://api.github.com/repos/{repo}/actions/variables/LAST_STATE"
-        headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
-        data = {"name": "LAST_STATE", "value": state}
-        requests.patch(url, json=data, headers=headers)
-    except:
-        pass
+    with open("GITHUB_ENV", "a") as f:
+        f.write(f"LAST_STATE={state}\n")
 
 # ------------------- 主逻辑 -------------------
 if __name__ == "__main__":
