@@ -8,7 +8,8 @@ jobs:
   run:
     runs-on: ubuntu-latest
     permissions:
-      actions: write  # 必须留！
+      actions: write   # 修改变量必须权限
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -20,9 +21,5 @@ jobs:
       - name: 安装依赖
         run: pip install -r requirements.txt
 
-      - name: 运行监控脚本
+      - name: 运行脚本
         run: python blinker_monitor.py
-
-      - name: 保存状态
-        if: always()
-        run: cat $GITHUB_ENV >> $GITHUB_ENV
