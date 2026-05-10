@@ -27,7 +27,7 @@ result = None
 got_response = False
 
 # ------------------- MQTT 消息回调 -------------------
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc, reasonCode):
     print("✅ MQTT 连接成功")
     client.subscribe(f"/device/{MY_CLIENT_ID}/r")
     
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     print("="*50)
 
     # 1. 连接MQTT并查询
-    client = mqtt.Client(MY_CLIENT_ID, mqtt.MQTTv311)
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, MY_CLIENT_ID, protocol=mqtt.MQTTv311)
     client.username_pw_set(MY_USER_ID, MY_PASSWORD)
     client.tls_set(cert_reqs=ssl.CERT_NONE)
     client.tls_insecure_set(True)
