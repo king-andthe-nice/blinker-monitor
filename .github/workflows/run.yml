@@ -1,9 +1,9 @@
 name: 点灯设备监控
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 jobs:
   run:
