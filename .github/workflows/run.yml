@@ -7,13 +7,13 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write    # ✅ 修改变量需要 contents: write
-      actions: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - run: python blinker_monitor.py
+      - name: 运行脚本
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}  # 传入 PAT
+        run: python blinker_monitor.py
