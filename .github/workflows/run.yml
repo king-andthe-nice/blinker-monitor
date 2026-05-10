@@ -2,7 +2,7 @@ name: 点灯设备监控
 on:
   workflow_dispatch:   # 允许手动运行
   schedule:
-    - cron: '* * * * *' # 每 1 分钟运行一次（UTC）
+    - cron: '*/1 * * * *' # 每 1 分钟运行一次（UTC）
 
 jobs:
   run:
