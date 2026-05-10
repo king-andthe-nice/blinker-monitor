@@ -8,18 +8,12 @@ jobs:
   run:
     runs-on: ubuntu-latest
     permissions:
-      actions: write   # 修改变量必须权限
-      contents: read
+      contents: write    # ✅ 修改变量需要 contents: write
+      actions: read
     steps:
       - uses: actions/checkout@v4
-
-      - name: 设置 Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: 安装依赖
-        run: pip install -r requirements.txt
-
-      - name: 运行脚本
-        run: python blinker_monitor.py
+      - run: pip install -r requirements.txt
+      - run: python blinker_monitor.py
