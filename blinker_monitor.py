@@ -61,13 +61,14 @@ def send_wechat(title, content):
 # ------------------- 读取 / 保存 上一次状态 -------------------
 def get_last_state():
     repo = os.environ.get("GITHUB_REPOSITORY")
-    token = os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get("GH_PAT")  # 改用 GH_PAT，不是 GITHUB_TOKEN
     if not repo or not token:
+        print("⚠️ 缺少 GH_PAT 环境变量")
         return None
     
     url = f"https://api.github.com/repos/{repo}/actions/variables/LAST_STATE"
     headers = {
-        "Authorization": f"Bearer {token}",  # 建议用 Bearer 而非 token
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3+json",
         "X-GitHub-Api-Version": "2022-11-28"
     }
@@ -77,15 +78,16 @@ def get_last_state():
         if r.status_code == 200:
             return r.json().get("value")
         else:
-            print(f"读取失败: {r.status_code} - {r.text}")
+            print(f"❌ 读取失败: {r.status_code} - {r.text}")
     except Exception as e:
-        print(f"读取异常: {e}")
+        print(f"❌ 读取异常: {e}")
     return None
 
 def save_state(state):
     repo = os.environ.get("GITHUB_REPOSITORY")
-    token = os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get("GH_PAT")  # 改用 GH_PAT
     if not repo or not token:
+        print("⚠️ 缺少 GH_PAT 环境变量")
         return False
     
     url = f"https://api.github.com/repos/{repo}/actions/variables/LAST_STATE"
@@ -94,18 +96,18 @@ def save_state(state):
         "Accept": "application/vnd.github.v3+json",
         "X-GitHub-Api-Version": "2022-11-28"
     }
-    data = {"value": state}  # 只传 value 即可
+    data = {"value": state}
     
     try:
         r = requests.patch(url, json=data, headers=headers)
         if r.status_code == 204:
-            print("状态保存成功")
+            print("✅ 状态保存成功")
             return True
         else:
-            print(f"保存失败: {r.status_code} - {r.text}")
+            print(f"❌ 保存失败: {r.status_code} - {r.text}")
             return False
     except Exception as e:
-        print(f"保存异常: {e}")
+        print(f"❌ 保存异常: {e}")
         return False
 # ------------------- 主逻辑 -------------------
 if __name__ == "__main__":
